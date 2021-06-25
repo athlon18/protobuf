@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"math"
 	"reflect"
 	"time"
@@ -123,7 +124,11 @@ func (en *encoder) value(key uint64, val reflect.Value, prefix TagPrefix) {
 		en.uvarint(key | 1)
 		en.u64(uint64(t))
 		return
-
+	case gorm.DeletedAt: // Encode time.Time as sfixed64 gorm.DeletedAt,
+		t := v.Time.UnixNano()
+		en.uvarint(key | 1)
+		en.u64(uint64(t))
+		return
 	case int64:
 		en.uvarint(key | 0)
 		en.svarint(v)
@@ -195,7 +200,7 @@ func (en *encoder) value(key uint64, val reflect.Value, prefix TagPrefix) {
 		en.uvarint(key | 0)
 		en.svarint(val.Int())
 
-	case reflect.Uint,reflect.Uint32, reflect.Uint64:
+	case reflect.Uint, reflect.Uint32, reflect.Uint64:
 		// Varint-encoded 32-bit and 64-bit unsigned integers.
 		en.uvarint(key | 0)
 		en.uvarint(val.Uint())
