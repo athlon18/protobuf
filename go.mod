@@ -1,4 +1,4 @@
-module go.dedis.ch/protobuf
+module github.com/athlon18/protobuf
 
 require (
 	github.com/stretchr/testify v1.3.0
