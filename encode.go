@@ -195,7 +195,7 @@ func (en *encoder) value(key uint64, val reflect.Value, prefix TagPrefix) {
 		en.uvarint(key | 0)
 		en.svarint(val.Int())
 
-	case reflect.Uint32, reflect.Uint64:
+	case reflect.Uint,reflect.Uint32, reflect.Uint64:
 		// Varint-encoded 32-bit and 64-bit unsigned integers.
 		en.uvarint(key | 0)
 		en.uvarint(val.Uint())
