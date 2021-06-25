@@ -1,6 +1,7 @@
 package protobuf
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"reflect"
@@ -8,10 +9,10 @@ import (
 	"sort"
 	"strings"
 	"text/template"
-	"errors"
 )
 
-const protoTemplate = `[[range $name, $values := .Enums]]
+const protoTemplate = `syntax = "proto3";
+[[range $name, $values := .Enums]]
 enum [[$name|$.Renamer.TypeName]] {[[range $values]]
   [[.Name|$.Renamer.ConstName]] = [[.Value]];[[end]]
 }
@@ -61,12 +62,12 @@ func fieldPrefix(f ProtoField, def TagPrefix) string {
 	case TagOptional:
 		return "optional "
 	case TagRequired:
-		return "required "
+		return " "
 	default:
 		if f.Field.Type.Kind() == reflect.Ptr {
 			return "optional "
 		}
-		return "required "
+		return " "
 	}
 }
 
